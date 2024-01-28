@@ -22,7 +22,7 @@ def e_valida(task_instance):
     return 'invalida'
 
 
-with DAG('02_my_first_dag'
+with DAG('01_my_first_dag'
         , start_date=datetime(2024, 1, 24)
         , schedule_interval="*/5 * * * *"
         , catchup=False) as dag:
