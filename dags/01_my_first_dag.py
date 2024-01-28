@@ -5,6 +5,16 @@ from airflow.operators.bash import BashOperator
 import pandas as pd
 import requests
 import json
+import os
+
+
+def get_file_name():
+    file_name_with_extension = os.path.basename(__file__)  # Get file name with extension
+    file_name_without_extension = os.path.splitext(file_name_with_extension)[0]  # Remove extension
+    return file_name_without_extension
+
+
+filename = get_file_name()
 
 
 def captura_conta_dados():
@@ -22,7 +32,7 @@ def e_valida(task_instance):
     return 'invalida'
 
 
-with DAG('01_my_first_dag'
+with DAG(filename
         , start_date=datetime(2024, 1, 24)
         , schedule_interval="*/5 * * * *"
         , catchup=False) as dag:

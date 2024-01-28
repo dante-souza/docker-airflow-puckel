@@ -2,6 +2,16 @@ from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
 from datetime import datetime, timedelta
 from airflow.operators.dummy_operator import DummyOperator
+import os
+
+
+def get_file_name():
+    file_name_with_extension = os.path.basename(__file__)  # Get file name with extension
+    file_name_without_extension = os.path.splitext(file_name_with_extension)[0]  # Remove extension
+    return file_name_without_extension
+
+
+filename = get_file_name()
 
 default_args = {
     "owner": "airflow",
@@ -11,7 +21,7 @@ default_args = {
     "retry_delay": timedelta(minutes=5),
 }
 
-dag = DAG("dummy_operator", default_args=default_args, schedule_interval=timedelta(1))
+dag = DAG(filename, default_args=default_args, schedule_interval=timedelta(1))
 
 t1 = BashOperator(task_id="print_date1", bash_command="date", dag=dag)
 

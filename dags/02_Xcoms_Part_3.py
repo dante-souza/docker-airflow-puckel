@@ -36,10 +36,20 @@ def pull_function(**kwargs):
     print(f"Pulled Message: {pulled_message}")
 
 
+def pull_function_returned(**kwargs):
+    ti = kwargs['ti']
+    pulled_message = ti.xcom_pull(key='message', task_ids='pull_task_returned')
+    print(f"Pulled Message: {pulled_message}")
+
+
 def new_push_function(**kwargs):
     message = 'This is the NEW pushed message.'
     ti = kwargs['ti']
     ti.xcom_push(key="message", value=message)
+
+
+def new_push_function_returned_value():
+    return 'This is the NEW pushed message.'
 
 
 t1 = PythonOperator(
@@ -54,10 +64,26 @@ t2 = PythonOperator(
     provide_context=True,
     dag=DAG)
 
+
 t3 = PythonOperator(
     task_id='new_push_task',
     python_callable=new_push_function,
     provide_context=True,
     dag=DAG)
 
-t1 >> t3 >> t2
+t4 = PythonOperator(
+    task_id='new_push_function_returned_value',
+    python_callable=new_push_function_returned_value,
+    provide_context=True,
+    dag=DAG)
+
+
+t5 = PythonOperator(
+    task_id='pull_task_returned',
+    python_callable=pull_function_returned,
+    provide_context=True,
+    dag=DAG)
+
+t1 >> [t3, t4]
+t3 >> t2
+t4 >> t5
