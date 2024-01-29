@@ -1,5 +1,7 @@
+from airflow.utils.dates import days_ago
 from airflow import DAG
-from airflow.operators.bash_operator import BashOperator
+# from airflow.operators.bash_operator import BashOperator
+from airflow.operators.bash import BashOperator
 from datetime import datetime, timedelta
 from airflow.models import Variable
 import os
@@ -15,9 +17,9 @@ filename = get_file_name()
 
 default_args = {
     "owner": "airflow",
-    "start_date": datetime(2019, 11, 27),
+    "start_date": days_ago(1),
 }
 
-dag = DAG(filename, default_args=default_args, schedule_interval=timedelta(1))
+dag = DAG(filename, default_args=default_args, schedule_interval=timedelta(days=1))
 
 t1 = BashOperator(task_id="print_path", bash_command="echo {{var.value.source_path}}", dag=dag)
