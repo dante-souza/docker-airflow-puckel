@@ -192,3 +192,5 @@ resources/
 #dags/
 
 logs/
+
+dags_azure/
