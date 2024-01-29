@@ -1,7 +1,8 @@
 from airflow import DAG
-from airflow.operators.bash_operator import BashOperator
+from airflow.utils.dates import days_ago
+from airflow.operators.bash import BashOperator
 from datetime import datetime, timedelta
-from airflow.operators.dummy_operator import DummyOperator
+from airflow.operators.empty import EmptyOperator as DummyOperator
 import os
 
 
@@ -16,7 +17,7 @@ filename = get_file_name()
 default_args = {
     "owner": "airflow",
     "depends_on_past": False,
-    "start_date": datetime(2019, 12, 15),
+    "start_date": days_ago(1),
     "retries": 1,
     "retry_delay": timedelta(minutes=5),
 }
