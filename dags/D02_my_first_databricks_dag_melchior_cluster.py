@@ -2,7 +2,7 @@ from datetime import timedelta
 from airflow.utils.dates import days_ago
 from airflow import DAG
 from airflow.providers.databricks.operators.databricks import DatabricksSubmitRunOperator
-from plugin_operator import get_file_name
+from filename_plugin_operator import get_file_name
 
 default_args = {
     "owner": "airflow",
