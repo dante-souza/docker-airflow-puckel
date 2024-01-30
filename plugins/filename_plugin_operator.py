@@ -2,6 +2,7 @@
 from airflow.plugins_manager import AirflowPlugin
 from filename_plugin import get_file_name
 
+
 class FilenamePluginOperator(AirflowPlugin):
     name = "filename_plugin_operator"
     operators = []
