@@ -5,7 +5,7 @@ from airflow import DAG
 from airflow.operators.empty import EmptyOperator
 from airflow.operators.python import PythonOperator
 from airflow.utils.dates import days_ago
-from include.ms_teams_callback_functions import failure_callback
+# from include.ms_teams_callback_functions import failure_callback
 
 import os
 
@@ -31,6 +31,11 @@ def raise_exception():
     return 1 / 0
 
 
+callbacks = {
+    "on_success_callback": dag_success_alert,
+    "on_failure_callback": task_failure_alert,
+}
+
 with DAG(
         dag_id=filename,
         schedule=None,
@@ -38,19 +43,19 @@ with DAG(
         start_date=days_ago(1),
         dagrun_timeout=datetime.timedelta(minutes=60),
         catchup=False,
-        on_success_callback=None,
-        # on_failure_callback=task_failure_alert,
-        on_failure_callback=failure_callback,
-        tags=["callbacks example from airflow docs webhook teams - 1"],
+
+        # on_failure_callback=failure_callback,
+        tags=["callbacks example from airflow docs webhook teams - 0.12"],
+        **callbacks
 ):
-    task1 = EmptyOperator(task_id="task1")
-    task2 = EmptyOperator(task_id="task2")
-    task3 = EmptyOperator(task_id="task3", on_success_callback=[dag_success_alert])
+    task1 = EmptyOperator(task_id="task1", **callbacks)
+    task2 = EmptyOperator(task_id="task2", **callbacks)
+    task3 = EmptyOperator(task_id="task3", **callbacks)
 
     raiser = PythonOperator(
         task_id="raise_exception"
         , python_callable=raise_exception
-        , on_failure_callback=[failure_callback]
+        , **callbacks
     )
 
     # task1 >> task2 >> task3
