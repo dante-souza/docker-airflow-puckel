@@ -30,7 +30,7 @@ def print_context(ds, **kwargs):
     print('ARGS:')
     print(ds)
     print('*' * 120)
-    return 'Whatever you return does not gets printed in the logs. Will appear in XCom.'
+    return 'Whatever you return gets printed in the logs and in XCom.'
 
 
 def my_sleeping_function(random_base):
